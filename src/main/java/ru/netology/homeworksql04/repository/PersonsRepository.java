@@ -1,21 +1,17 @@
 package ru.netology.homeworksql04.repository;
 
-import ru.netology.homeworksql04.entity.Persons;
-import jakarta.persistence.*;
+import ru.netology.homeworksql04.entity.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-//@AllArgsConstructor
-public class PersonsRepository {
+public interface PersonsRepository extends JpaRepository<Persons, PersonKey> {
+    List<Persons> findAllByCityOfLiving(String cityOfLiving);
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    List<Persons> findByPersonKey_AgeIsLessThanOrderByPersonKeyAgeAsc(int age);
 
-    public List<Persons> getPersonsByCity(String city){
-        var query = entityManager.createQuery("select p from Persons p where lower(p.cityOfLiving) = lower(:city)", Persons.class);
-        query.setParameter("city",city);
-        return query.getResultList();
-
-    }
+    Optional<Persons> findByPersonKey_NameAndPersonKey_Surname(String name, String surname);
 }
